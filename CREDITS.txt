@@ -1,0 +1,7 @@
+Third-party Foley credit
+StarNinjas: 20 Sword Sound Effects (Attacks and Clashes)
+https://opengameart.org/content/20-sword-sound-effects-attacks-and-clashes
+CC0 1.0: https://creativecommons.org/publicdomain/zero/1.0/
+Used as processed layers in original Project Survivor SFX sound design.
+Other audio is original procedural synthesis.
+CC0 applies to the source Foley only, not automatically to all game assets or music.

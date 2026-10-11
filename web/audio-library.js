@@ -32,7 +32,7 @@ function route(){
     link.classList.toggle('active',active);
     if(active)link.setAttribute('aria-current','page');else link.removeAttribute('aria-current');
   });
-  document.title=currentView==='qinglan'?'青岚谷道 · 音乐 | Project Survivor':currentView==='combat'?'青锋剑 · 音效 | Project Survivor':'关卡音乐 | Project Survivor';
+  document.title=currentView==='qinglan'?'青岚谷道 · 音乐 | Project Survivor':currentView==='combat'?'青锋剑 · 音效 | Project Survivor':'Project Survivor · 山海初见';
   sync();window.scrollTo({top:0,behavior:'instant'});
 }
 async function toggleMusic(){
@@ -46,7 +46,8 @@ document.getElementById('mini-toggle').addEventListener('click',toggleMusic);
 bgm.addEventListener('play',()=>{hasPlayed=true;sync();});
 bgm.addEventListener('error',()=>{document.getElementById('bgm-error').hidden=false;});
 seek.addEventListener('input',()=>{seeking=true;document.getElementById('elapsed').textContent=time(Number(seek.value));});
-seek.addEventListener('change',()=>{if(Number.isFinite(bgm.duration))bgm.currentTime=Number(seek.value);seeking=false;sync();});
+seek.addEventListener('change',()=>{if(Number.isFinite(bgm.duration)){bgm.currentTime=Number(seek.value);}else{seeking=false;sync();}});
+bgm.addEventListener('seeked',()=>{seeking=false;sync();});
 document.getElementById('bgm-loop').addEventListener('change',e=>bgm.loop=e.target.checked);
 document.getElementById('bgm-volume').addEventListener('input',e=>bgm.volume=Number(e.target.value));
 document.querySelectorAll('.sfx-audio').forEach(a=>a.addEventListener('play',()=>document.querySelectorAll('.sfx-audio').forEach(b=>{if(a!==b)b.pause();})));
@@ -54,9 +55,9 @@ const activeShots=new Set();
 document.querySelectorAll('[data-sound]').forEach(button=>button.addEventListener('click',async()=>{
   const control=document.getElementById(button.dataset.sound);
   const instance=new Audio(control.currentSrc||control.src);instance.volume=control.volume;
-  activeShots.add(instance);instance.addEventListener('ended',()=>activeShots.delete(instance),{once:true});
+  activeShots.add(instance);instance.addEventListener('playing',()=>{button.classList.add('is-playing');button.setAttribute('aria-pressed','true');button.dataset.playCount=String(Number(button.dataset.playCount||0)+1);});instance.addEventListener('ended',()=>{activeShots.delete(instance);button.classList.remove('is-playing');button.setAttribute('aria-pressed','false');},{once:true});
   try{await instance.play();document.getElementById('sfx-error').hidden=true;}
-  catch{activeShots.delete(instance);document.getElementById('sfx-error').hidden=false;}
+  catch{activeShots.delete(instance);button.classList.remove('is-playing');button.setAttribute('aria-pressed','false');document.getElementById('sfx-error').hidden=false;}
 }));
 window.addEventListener('hashchange',route);route();
 
